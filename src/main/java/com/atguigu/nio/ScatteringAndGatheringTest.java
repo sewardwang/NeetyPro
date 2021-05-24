@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class ScatteringAndGatheringTest {
     public static void main(String[] args) throws Exception {
 
-        //使用ServerSocketChannel 与SocketChannel 网络
+        //使用ServerSocketChannel 获取与SocketChannel 网络
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         InetSocketAddress inetSocketAddress = new InetSocketAddress(7000);

@@ -1,8 +1,6 @@
 package com.atguigu.nio;
 
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.channels.Channel;
 
 /**
  * @Author : wangzh

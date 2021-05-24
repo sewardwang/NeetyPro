@@ -13,7 +13,7 @@ public class NIOFileChannel01 {
     public static void main(String[] args) throws Exception{
 
 
-        String string = "hello,振华";
+        String str = "hello,振华";
         //创意个输出流->channel
 
         FileOutputStream fileOutputStream = new FileOutputStream("d:/file01.txt");
@@ -25,7 +25,7 @@ public class NIOFileChannel01 {
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
 
         //将 str 放入到byteBuffer
-        byteBuffer.put(string.getBytes());
+        byteBuffer.put(str.getBytes());
 
         //对byteBuffer进行flip反转
         byteBuffer.flip();
