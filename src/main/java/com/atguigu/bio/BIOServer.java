@@ -62,7 +62,7 @@ public class BIOServer {
     }
 
     //编写一个handler方法、和客户端通讯
-    public static void handler(Socket scoket) {
+    public static void handler(Socket socket) {
 
         try {
             System.out.println("线程信息 ID =" + Thread.currentThread().getId() + "线程信息 名字 =" + Thread.currentThread().getName());
@@ -72,7 +72,7 @@ public class BIOServer {
             byte[] bytes = new byte[1024];
 
             //通过socket 获取输入流
-            InputStream inputStream = scoket.getInputStream();
+            InputStream inputStream = socket.getInputStream();
 
             //循环的读取客户发送的数据
             while (true) {
@@ -96,7 +96,7 @@ public class BIOServer {
             System.out.println("关闭和client的连接");
         }
         try {
-            scoket.close();
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -30,7 +30,7 @@ public class NIOClient {
         }
 
         //如果连接成功就发送数据
-        String str = "Hello,尚硅谷";
+        String str = "Hello,尚硅谷       ";
 
         //Wraps a byte array into a buffer  包裹中的数据放到buffer 比较方便
         //以前的普通写法

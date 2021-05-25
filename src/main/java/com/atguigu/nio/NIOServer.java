@@ -15,7 +15,7 @@ import java.util.Set;
  * @Description :
  */
 public class NIOServer {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         //创建ServerSocketChannel  ->ServerSocket
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -33,11 +33,13 @@ public class NIOServer {
 
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
+        System.out.println("注册后的selectionKey 数量=" + selector.keys().size());
+
         //循环等待客户端连接
-        while (true){
+        while (true) {
 
             //等待一秒，也可以用selector.selectNow,如果没事件发生返回
-            if (selector.select(1000) == 0){//没有事件发生
+            if (selector.select(1000) == 0) {//没有事件发生
                 System.out.println("服务器等待了1秒，无连接");
                 continue;
             }
@@ -53,36 +55,45 @@ public class NIOServer {
 
             Iterator<SelectionKey> keyIterator = selectionKeys.iterator();
 
-            while (keyIterator.hasNext()){
+            while (keyIterator.hasNext()) {
 
                 //获取到SelectionKey
                 SelectionKey key = keyIterator.next();
 
                 //根据当前key对应的通道发生的事件做相应的处理
-                if (key.isConnectable()) {//如果发生的是OP_ACCEPT 代表有新的客户端来连接了
+                if (key.isAcceptable()) {//如果发生的是OP_ACCEPT 代表有新的客户端来连接了
                     //给该客户端生产一个socketChannel
                     SocketChannel socketChannel = serverSocketChannel.accept();
+
+                    //输出一下代表客户端连接上来了做标识
+                    System.out.println("客户端连接成功，生产了一个socketChannel " + socketChannel.hashCode());
+
+                    //将socketChannel设置为非阻塞
+                    socketChannel.configureBlocking(false);
+
                     //将当前socketChannel注册到selector,关联的事件为OP_READ，同时给socketChannel
-                    //管理一个buffer
+                    //关联一个buffer
 
-                    socketChannel.register(selector,SelectionKey.OP_READ, ByteBuffer.allocate(1024));
+                    socketChannel.register(selector, SelectionKey.OP_READ, ByteBuffer.allocate(1024));
 
+                    System.out.println("客户端连接后后的selectionKey 数量=" + selector.keys().size());
                 }
 
-                if (key.isReadable()){//发生OP_READ事件 与上面OP_READ是两个不同的业务
+                if (key.isReadable()) {//发生OP_READ事件 与上面OP_READ是两个不同的业务
                     //通过key 反向获取channel
-                    key.cancel();
                     SocketChannel channel = (SocketChannel) key.channel();
 
-                    //获取到该channel关联的buffer
-                    ByteBuffer buffer = (ByteBuffer)key.attachment();
+                    //可根据业务逻辑修改相对应的业务，暂时屏蔽
+                    //key.interestOps(SelectionKey.OP_WRITE);
 
-                    //将当前channel读取到buffer中去
+                    //获取到该channel关联的buffer
+                    ByteBuffer buffer = (ByteBuffer) key.attachment();
+
+                    //将当前channel放到到buffer中去
                     channel.read(buffer);
                     System.out.println("form 客户端" + new String(buffer.array()));
 
                     channel.close();
-
 
 
                 }
@@ -92,7 +103,6 @@ public class NIOServer {
 
 
             }
-
 
 
         }
